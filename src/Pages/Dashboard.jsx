@@ -8,6 +8,7 @@ export const Dashboard = () => {
   const { userDetails } = GetContextValue();
   const [bookedTrain, setBookedTrain] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const GetAllTerain = async () => {
     setLoading(true);
     try {
@@ -76,7 +77,8 @@ export const Dashboard = () => {
                       <h3 className="text-lg font-medium">
                         {train?.train_name}
                       </h3>
-                      <p className="text-gray-600">{train?.train_number}</p>
+                      <p className="text-gray-600">{train?.train_details
+?.train_number}</p>
                       <button
                         onClick={() => handleCancelBooking(train?._id)}
                         className="md:w-36 w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
@@ -86,18 +88,22 @@ export const Dashboard = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        From: {train?.source}
+                        From: {train?.train_details
+?.source}
                       </p>
                       <p className="text-sm text-gray-500">
-                        To: {train?.destination}
+                        To: {train?.train_details
+?.destination}
                       </p>
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Departure: {train?.arrival_time_at_source}
+                        Departure: {train?.train_details
+?.arrival_time_at_source}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Arrival: {train?.arrival_time_at_destination}
+                        Arrival: {train?.train_details
+?.arrival_time_at_destination}
                       </p>
                       <p className="text-sm text-gray-500">Your seat: 32</p>
                     </div>

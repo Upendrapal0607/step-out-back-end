@@ -27,7 +27,6 @@ export const LoginUser = async (payload) => {
 export const GetAllTrain = async (payload) => {
   try {
     return await axios.post(`${bashUrl}admin/gettrain`, payload);
-    
   } catch (error) {
     return {
       error,
@@ -43,7 +42,6 @@ export const AddNewTrainUpdate = async (payload) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Inside controller", data);
     return data;
   } catch (error) {
     console.log({ error });

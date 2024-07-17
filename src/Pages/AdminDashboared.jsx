@@ -27,12 +27,18 @@ export const AdminDashboared = () => {
 
   const HandleSubmitTrain = async (e) => {
     e.preventDefault();
-    console.log(trainDetails);
+    console.log("Details",trainDetails);
     try {
-      await AddNewTrainUpdate(trainDetails);
-      alert("train details updated");
-      const data = await GetAllTrain();
-      setTrainList(data?.data?.data);
+     const response =  await AddNewTrainUpdate(trainDetails);
+     if(response?.data?.message=="Train has been saved successfully"){
+
+       alert(response?.data?.message);
+       const data = await GetAllTrain();
+       setTrainList(data?.data?.data);
+     }
+     else{
+       alert(response?.data?.message);
+     }
     } catch (error) {
       console.log({ error });
     }
