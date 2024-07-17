@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  border-top-color: #3498db; /* Blue */
+  animation: spin 1s linear infinite;
+}
