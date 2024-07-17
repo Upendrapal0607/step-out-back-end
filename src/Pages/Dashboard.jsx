@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import { GetContextValue } from "../ContextProvider/TrainContext";
 import { CancelBookedTrain, GetBookedTrain } from "../Controller/Controller";
 import { Loader } from "../Components/Loader";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
   const { userDetails } = GetContextValue();
   const [bookedTrain, setBookedTrain] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [Trainid, setTrainId] = useState(null);
+  const toast = useToast();
 
   const GetAllTerain = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const traindata = await GetBookedTrain({ userId: userDetails?.email });
       setBookedTrain(traindata.data.data);
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -26,11 +29,40 @@ export const Dashboard = () => {
 
   const handleCancelBooking = async (id) => {
     try {
+      setTrainId(id);
       const Data = await CancelBookedTrain(id);
+      console.log(Data.data.message);
+      if (Data?.data?.message == "Train has been canceled") {
+        setTrainId(null);
+        toast({
+          title: "Cancel Success",
+          description: "You are successfully canceled train",
+          status: "success",
+          duration: 7000,
+          isClosable: true,
+        });
+      } else {
+        setTrainId(null);
+        toast({
+          title: "Cancel Failed",
+          description: "Sorry we are not able to cancel",
+          status: "error",
+          duration: 7000,
+          isClosable: true,
+        });
+      }
       GetAllTerain();
     } catch (error) {
-      alert(error?.message);
-      console.log(error);
+      setTrainId(null);
+  
+      toast({
+        title: "Cancel Failed",
+        description: error?.message,
+        status: "error",
+        duration: 7000,
+        isClosable: true,
+      });
+
     }
   };
   return (
@@ -49,23 +81,14 @@ export const Dashboard = () => {
           </h1>
         </div>
 
-        {loading ? (
-          <div>
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-            />
-          </div>
-        ) : bookedTrain.length <= 0 ? (
-          <div>
-            <div className="text-center">No Train available</div>
+        {bookedTrain.length <= 0 ? (
+          <div className="mt-4 ">
+            <div className="text-center font-bold text-xl pt-8 mb-10">You Haven't Booked any train yet</div>
+            <Link to={"/"} className="md:w-36 w-full  bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">Book now</Link>
           </div>
         ) : (
           <div className="bg-white m-auto w-full mt-10 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Train Availability</h2>
+            <h2 className="text-xl font-semibold mb-4">Booke train</h2>
             <div className="space-y-4">
               {bookedTrain.map((train, index) => (
                 <div
@@ -77,33 +100,32 @@ export const Dashboard = () => {
                       <h3 className="text-lg font-medium">
                         {train?.train_name}
                       </h3>
-                      <p className="text-gray-600">{train?.train_details
-?.train_number}</p>
+                      <p className="text-gray-600">
+                        {train?.train_details?.train_number}
+                      </p>
                       <button
                         onClick={() => handleCancelBooking(train?._id)}
                         className="md:w-36 w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
                       >
-                        Cancel
+                        {Trainid !== train?._id ? "Cancel" : "Wait..."}
                       </button>
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        From: {train?.train_details
-?.source}
+                        From: {train?.train_details?.source}
                       </p>
                       <p className="text-sm text-gray-500">
-                        To: {train?.train_details
-?.destination}
+                        To: {train?.train_details?.destination}
                       </p>
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Departure: {train?.train_details
-?.arrival_time_at_source}
+                        Departure:{" "}
+                        {train?.train_details?.arrival_time_at_source}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Arrival: {train?.train_details
-?.arrival_time_at_destination}
+                        Arrival:{" "}
+                        {train?.train_details?.arrival_time_at_destination}
                       </p>
                       <p className="text-sm text-gray-500">Your seat: 32</p>
                     </div>

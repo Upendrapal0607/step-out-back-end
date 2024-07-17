@@ -1,10 +1,11 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Stack, Text, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ResisterUser } from "../Controller/Controller";
 
 const Register = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [userDetail, setUserDetail] = useState({
     username: "",
     pwd: "",
@@ -23,12 +24,33 @@ const Register = () => {
 
     try {
       const data = await ResisterUser(userDetail);
-      alert(data.data.message);
+      // alert(data.data.message);
       if(data.data.message=="User registered successfully."){
+        toast({
+          title: 'Register alert',
+          description: data.data.message,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
         navigate("/login");
+      }else{
+        toast({
+          title: 'Register alert',
+          description: data.data.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        })
       }
     } catch (error) {
-      console.log({ error });
+      toast({
+        title: 'Register Failed',
+        description: "Register failed try again",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
     }
   };
 

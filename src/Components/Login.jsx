@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Stack, Text, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../Controller/Controller";
@@ -7,6 +7,7 @@ import { GetContextValue } from "../ContextProvider/TrainContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const { setIsAuth, SetLoginType, setUserDetails } = GetContextValue();
   const navigate = useNavigate();
@@ -25,20 +26,41 @@ const Login = () => {
           JSON.stringify(data.data.data.token)
         );
         if (data?.data?.data.role == "admin") {
-          alert("Login successful welcome Admin Step Out Train Update");
+       
+          toast({
+            title: 'Admin Login Success',
+            description: "Login successful welcome Admin Step Out Train Update!",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
           SetLoginType("admin");
           setUserDetails(data?.data?.data);
           setIsAuth(true);
           navigate("/admindashboard");
         } else {
           setUserDetails(data?.data?.data);
-          alert("Login successful welcome to Step Out Ticket Booking Service");
+          toast({
+            title: 'User Login Success',
+            description: "Login successful welcome to Step Out Ticket Booking Service!",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        
           setIsAuth(true);
           SetLoginType("user");
           navigate("/dashboard");
         }
       } else {
-        alert("Invalid Credentials");
+  
+        toast({
+          title: 'Login Failed',
+          description: "Invalid Credentials!",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
       }
     } catch (error) {
       console.log({ error });

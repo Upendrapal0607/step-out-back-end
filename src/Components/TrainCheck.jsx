@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { GetContextValue } from "../ContextProvider/TrainContext";
 import { GetAllTrain } from "../Controller/Controller";
+import { useToast } from "@chakra-ui/react";
 // import { GetAttTrain } from '../Controller/Controller';
+import city from "../db.json";
 
 function TrainCheck() {
   const [source, setSource] = useState("");
@@ -9,6 +11,7 @@ function TrainCheck() {
   const [date, setDate] = useState(new Date());
   const [trainId, setTrainId] = useState("");
   const { setTrainList } = GetContextValue();
+  const toast = useToast();
 
   const handleCheckTrain = async (e) => {
     e.preventDefault();
@@ -19,10 +22,16 @@ function TrainCheck() {
     };
     try {
       const data = await GetAllTrain(trainData);
-      console.log(data);
+
       setTrainList(data?.data?.data);
     } catch (error) {
-      alert(error.message);
+      toast({
+        title: "Error accessing train",
+        description: error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
   const FindByTrainID = async (e) => {
@@ -36,7 +45,13 @@ function TrainCheck() {
       console.log(data);
       setTrainList(data?.data?.data);
     } catch (error) {
-      alert(error.message);
+      toast({
+        title: "Error accessing train",
+        description: error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -50,26 +65,42 @@ function TrainCheck() {
           className=" md:justify-center space-y-4 md:w-[60%] md:gap-2 gap-0 w-full md:items-center flex md:flex-row flex-col"
           onSubmit={handleCheckTrain}
         >
-          <div>
-            <input
+          <div className="mt-[20px]">
+            <select
               value={source}
               onChange={(e) => setSource(e.target.value)}
               type="text"
               id="from"
-              className="mt-[20px] block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
-              placeholder="Enter departure station"
-            />
+              className="block w-full py-[10px] px-4 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="">Select Source</option>
+              {city?.city?.map((item) => (
+                <option value={item?.name} key={item?.name}>
+                  {item?.name}
+                </option>
+              ))}
+        
+            </select>
           </div>
-          <div className="">
-            <input
+          
+          <div className="mt-[20px]">
+            <select
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               id="to"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
-              placeholder="Enter destination station"
-            />
+              className="block w-full py-[10px] px-4 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="">Select Destination</option>
+              {city?.city?.map((item) => (
+                <option value={item?.name} key={item?.name}>
+                  {item?.name}
+                </option>
+              ))}
+          
+            </select>
           </div>
+         
           <div>
             <input
               value={date}

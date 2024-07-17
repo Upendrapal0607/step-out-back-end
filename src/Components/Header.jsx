@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GetContextValue } from "../ContextProvider/TrainContext";
+import { useToast } from "@chakra-ui/react";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuth, setIsAuth, loginType, userDetails } = GetContextValue();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const toggleNavbar = () => {
@@ -12,6 +14,14 @@ export const Header = () => {
   };
   const handleLogOut = () => {
     localStorage.removeItem("trailtoken");
+    
+    toast({
+      title: 'Log Out',
+      description: "Log Out success!",
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
     setIsAuth(false);
     navigate("/");
   };
