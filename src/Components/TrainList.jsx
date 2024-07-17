@@ -16,6 +16,7 @@ export const TrainList = () => {
       setLoading(true);
       try {
         const data = await GetAllTrain();
+        console.log(data);
         setTrainList(data?.data?.data || []);
         setLoading(false);
       } catch (error) {

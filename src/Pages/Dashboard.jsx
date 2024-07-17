@@ -26,7 +26,6 @@ export const Dashboard = () => {
   const handleCancelBooking = async (id) => {
     try {
       const Data = await CancelBookedTrain(id);
-      console.log(Data);
       GetAllTerain();
     } catch (error) {
       alert(error?.message);

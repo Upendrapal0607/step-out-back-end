@@ -1,5 +1,5 @@
 import axios from "axios";
-const bashUrl = "http://localhost:8080/";
+const bashUrl = "https://step-out-backend.vercel.app/";
 const token = JSON.parse(localStorage.getItem("trailtoken")) || "";
 
 export const ResisterUser = async (payload) => {
@@ -27,6 +27,7 @@ export const LoginUser = async (payload) => {
 export const GetAllTrain = async (payload) => {
   try {
     return await axios.post(`${bashUrl}admin/gettrain`, payload);
+    
   } catch (error) {
     return {
       error,

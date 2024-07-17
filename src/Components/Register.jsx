@@ -1,9 +1,10 @@
 import { Stack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ResisterUser } from "../Controller/Controller";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState({
     username: "",
     pwd: "",
@@ -14,6 +15,7 @@ const Register = () => {
   const HandleChange = (e) => {
     const { name, value } = e.target;
     setUserDetail({ ...userDetail, [name]: value });
+
   };
 
   const HandleResister = async (e) => {
@@ -21,6 +23,10 @@ const Register = () => {
 
     try {
       const data = await ResisterUser(userDetail);
+      alert(data.data.message);
+      if(data.data.message=="User registered successfully."){
+        navigate("/login");
+      }
     } catch (error) {
       console.log({ error });
     }

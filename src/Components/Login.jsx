@@ -17,7 +17,7 @@ const Login = () => {
       const data = await LoginUser({ email: email, pwd: password });
       setLoading(false);
       if (
-        data.statusText == "OK" &&
+        data.statusText == "OK" ||
         data?.data?.message == "Login successful."
       ) {
         localStorage.setItem(
